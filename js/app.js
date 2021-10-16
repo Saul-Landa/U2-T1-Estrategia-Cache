@@ -1,7 +1,7 @@
 let principal = $('#principal')
 let noticia = $('#noticia')
 let url = window.location.href
-let swDirect = '/U2-T1-Estrategia-Cache/sw.js'
+let swDirect = '/U2-T1-Estrategia-Cache/sw_git.js'
 
 if(navigator.serviceWorker){
     if(url.includes('localhost')){
