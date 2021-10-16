@@ -1,14 +1,13 @@
 console.log("Sw; limpio");
 
-const CACHE_NAME = 'cache-v1'
-const CACHE_DYNAMIC_NAME = 'dynamic-v1'
-const CACHE_STATIC_NAME = 'static-v1'
-const CACHE_INMUTABLE_NAME = 'inmutable_v1'
+const CACHE_NAME = 'cache'
+const CACHE_DYNAMIC_NAME = 'dynamic'
+const CACHE_STATIC_NAME = 'static'
+const CACHE_INMUTABLE_NAME = 'inmutable'
 
 const cleanCache = (name, sizeItems) => {
     caches.open(name).then(cache => {
         cache.keys().then(keys => {
-            console.log(keys)
             if(keys.length > sizeItems) {
                 cache.delete(keys[0]).then(() => {
                     cleanCache(name, sizeItems)
@@ -23,17 +22,23 @@ self.addEventListener('install', event => {
         .then(cache => {
             return cache.addAll([
                 '/',
-                'index.html', 
-                'css/page.css',
-                'img/1.png',
-                'js/app.js'
+                '/index.html', 
+                '/manifest.json', 
+                '/css/style.css',
+                '/img/1.png',
+                '/img/2.png',
+                '/img/3.png',
+                '/img/4.png',
+                '/js/app.js'
             ])
         });
 
     const promesaInmu = caches.open(CACHE_INMUTABLE_NAME)
     .then(cache => {
         return cache.addAll([
-            'https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css'
+            '/css/bootstrap.min.css',
+            'https://code.jquery.com/jquery-3.5.1.slim.min.js',
+            'https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js'
         ])
     });
 
@@ -41,21 +46,14 @@ self.addEventListener('install', event => {
 })
 
 self.addEventListener('fetch', event => {
-    //1. Only chaché
-    // event.respondWith(caches.match(event.request))
-
-    //2. Caché with network fallback
-    // Primero va a buscar en caché y sino lo encuentra va a la red
-
     const respuesta = caches.match(event.request)
         .then(response => {
             if(response) return response
 
-            console.log("No está en chaché")
             return fetch(event.request)
                 .then(res => {
                     caches.open(CACHE_DYNAMIC_NAME).then(cache => cache.put(event.request, res).then(() => {
-                        cleanCache(CACHE_DYNAMIC_NAME, 6)
+                        cleanCache(CACHE_DYNAMIC_NAME, 10)
                     }))
                     
                     return res.clone()

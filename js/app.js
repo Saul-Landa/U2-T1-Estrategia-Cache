@@ -1,16 +1,20 @@
 let principal = $('#principal')
-let noticia = $('#notice')
+let noticia = $('#noticia')
+let url = window.location.href
+let swDirect = '/U2-T1-Estrategia-Cache/sw.js'
+
+if(navigator.serviceWorker){
+    if(url.includes('localhost')){
+        swDirect = '/sw.js'
+    }
+    navigator.serviceWorker.register(swDirect);
+}
 
 $('.btn-seguir').on('click', (e) => {
     e.preventDefault();
-    console.log("entraste a seguir")
     principal.fadeOut(() => {
         noticia.slideDown(1000)
     })
-    // noticia.fadeIn('slow', () => {
-    //     principal.slideUp(1000)
-    // })
-    //20213-PW-SELG-U2-P2
 })
 
 $('.btn-regresar').on('click', () => {
